@@ -1,0 +1,4 @@
+# Allow promiscuous interfaces
+#   <option>:<promiscuous interface name>:<description>:
+#if_promisc:pflog0:pf log daemon interface:
+if_promisc:virbr0-nic:Docker virtual bridge

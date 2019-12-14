@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "Sudo password"
+    private: yes
+  roles:
+    - common
+    - yubikey

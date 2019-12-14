@@ -1,0 +1,31 @@
+---
+- name: create auto start directory for gnome
+  become: no
+  file:
+    dest: ~/.config/autostart
+    state: directory
+
+- name: copy gnome keyring ssh file to autostart
+  become: no
+  copy:
+    src: /etc/xdg/autostart/gnome-keyring-ssh.desktop
+    dest: ~/.config/autostart/
+
+- name: disable gnome keyring SSH
+  become: no
+  shell: echo "Hidden=true" >> ~/.config/autostart/gnome-keyring-ssh.desktop
+
+- name: enable agent in gpg.conf
+  become: no
+  blockinfile:
+    path: ~/.gnupg/gpg.conf
+    block: |
+      use-agent
+
+- name: configure agent in gpg-agent.conf
+  become: no
+  blockinfile:
+    path: ~/.gnupg/gpg-agent.conf
+    block: |
+      enable-ssh-support
+      pinentry-program /usr/bin/pinentry-gnome3
