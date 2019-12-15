@@ -4,6 +4,12 @@
     name: ufw
     state: absent
 
+- name: Create Lynios conf dir
+  file:
+    path: /etc/lynis
+    state: directory
+    mode: '0600'
+
 - name: install custom Lynis profile
   copy:
     src: files/custom.prf
