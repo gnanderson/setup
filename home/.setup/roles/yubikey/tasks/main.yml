@@ -15,6 +15,12 @@
   become: no
   shell: echo "Hidden=true" >> ~/.config/autostart/gnome-keyring-ssh.desktop
 
+- name: touch gpg.conf
+  file:
+    path: ~/.gnupg/gpg.conf
+    state: touch
+    mode: u=rw
+
 - name: enable agent in gpg.conf
   become: no
   blockinfile:
@@ -22,7 +28,7 @@
     block: |
       use-agent
 
-- name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+- name: touch gpg-agent.conf
   file:
     path: ~/.gnupg/gpg-agent.conf
     state: touch
