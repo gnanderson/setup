@@ -34,6 +34,7 @@
   apt:
     force_apt_get: yes
     pkg:
+    - git
     - curl
     - inetutils-traceroute
     - apt-show-versions
@@ -52,7 +53,6 @@
     - neovim
     - python3-neovim
     - bash-completion
-    - git
     - iotop
     - docker.io
     - python3-docker

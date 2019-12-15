@@ -22,6 +22,12 @@
     block: |
       use-agent
 
+- name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+  file:
+    path: ~/.gnupg/gpg-agent.conf
+    state: touch
+    mode: u=rw
+
 - name: configure agent in gpg-agent.conf
   become: no
   blockinfile:
