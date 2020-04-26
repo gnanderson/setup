@@ -1,0 +1,28 @@
+---
+- name: Mount backup volume
+  mount:
+    path: /backup
+    src: /dev/mapper/system-backup
+    fstype: xfs
+    opts: noatime
+    state: mounted
+    backup: yes
+
+- name: Mount KVM/libvirt volume
+  mount:
+    path: /etc/libvirt
+    src: /dev/mapper/system-libvirt
+    fstype: xfs
+    opts: noatime
+    state: mounted
+    backup: yes
+
+- name: Mount windows volume
+  mount:
+    path: /mnt/windows
+    src: /dev/disk/by-uuid/f984e586-0d1e-4a99-810f-34eb08496bd5
+    fstype: xfs
+    opts: noatime
+    state: mounted
+    backup: yes
+

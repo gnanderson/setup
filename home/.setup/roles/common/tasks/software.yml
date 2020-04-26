@@ -1,0 +1,84 @@
+---
+- name: remove ubuntu firewall (use firewalld instead)
+  apt:
+    name: ufw
+    state: absent
+
+- name: Create Lynis conf dir
+  file:
+    path: /etc/lynis
+    state: directory
+    mode: '0600'
+
+- name: install custom Lynis profile
+  copy:
+    src: files/custom.prf
+    dest: /etc/lynis/custom.prf
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: disable getting translations for software packages
+  shell: echo 'Acquire::Languages "none";' | tee /etc/apt/apt.conf.d/99disable-translations
+
+- name: import Lynis package key
+  shell: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C80E383C3DE9F082E01391A0366C67DE91CA5D5F
+
+- name: add Lynis repository
+  shell: echo "deb https://packages.cisofy.com/community/lynis/deb/ stable main" | tee /etc/apt/sources.list.d/cisofy-lynis.list
+
+- name: update repo package lists
+  shell: apt update
+
+- name: install base packages
+  apt:
+    force_apt_get: yes
+    pkg:
+    - git
+    - jq
+    - curl
+    - inetutils-traceroute
+    - apt-show-versions
+    - libpam-cracklib
+    - firewalld
+    - haveged
+    - nmap
+    - rsnapshot
+    - lynis
+    - rkhunter
+    - arpwatch
+    - tmux
+    - bat
+#   - ripgrep
+    - htop
+    - neovim
+    - python3-neovim
+    - bash-completion
+    - iotop
+    - docker.io
+    - python3-docker
+    - bridge-utils
+    - ethtool
+    - gnome-tweaks
+    - dconf-editor
+    - gnupg
+    - pcscd
+    - scdaemon
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
+
+- name: purge remaining redundant package artifacts
+  shell: apt -y purge `dpkg --list | grep ^rc | awk '{ print $2; }'`
+
+

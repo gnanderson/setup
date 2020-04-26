@@ -1,0 +1,32 @@
+---
+- name: Create libvirt dir
+  file:
+    path: "/var/lib/libvirt"
+    state: directory
+
+- name: Create symbolic link 
+  file:
+    src: "/etc/libvirt/images"
+    dest: "/var/lib/libvirt/images"
+    state: link
+
+- name: install base packages
+  apt:
+    force_apt_get: yes
+    pkg:
+    - qemu-kvm
+    - virt-manager
+    - libvirt-daemon-system
+    - libvirt-clients
+
+
+- name: Ensure kernel is booted with passthrough support
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet splash iommu=pt iommu=1 intel_iommu=on mitigations=auto\""
+
+- name: update grub
+  command: update-grub
+
+#- meta: end_play

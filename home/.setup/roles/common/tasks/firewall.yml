@@ -1,0 +1,16 @@
+---
+- name: add tailscale repo key for 20.04
+  shell: curl https://pkgs.tailscale.com/stable/ubuntu/eoan.gpg | apt-key add -
+
+- name: add tailscale repo for 20.04
+  shell: curl https://pkgs.tailscale.com/stable/ubuntu/eoan.list | tee /etc/apt/sources.list.d/tailscale.list
+
+- name: install tailscale
+  shell: apt-get update && apt-get install tailscale
+
+- name: Add wireguard interface to trusted zone
+  firewalld:
+    zone: trusted
+    interface: tailscale0
+    permanent: yes
+    state: enabled
