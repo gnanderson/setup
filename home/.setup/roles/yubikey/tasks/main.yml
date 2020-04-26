@@ -5,6 +5,12 @@
     dest: ~/.config/autostart
     state: directory
 
+- name: create environment directory for gnome
+  become: no
+  file:
+    dest: ~/.config/environment.d
+    state: directory
+
 - name: copy gnome keyring ssh file to autostart
   become: no
   copy:
@@ -16,6 +22,7 @@
   shell: echo "Hidden=true" >> ~/.config/autostart/gnome-keyring-ssh.desktop
 
 - name: touch gpg.conf
+  become: no
   file:
     path: ~/.gnupg/gpg.conf
     state: touch
@@ -26,9 +33,11 @@
   blockinfile:
     path: ~/.gnupg/gpg.conf
     block: |
+      trust-model tofu+pgp
       use-agent
 
 - name: touch gpg-agent.conf
+  become: no
   file:
     path: ~/.gnupg/gpg-agent.conf
     state: touch
@@ -41,3 +50,17 @@
     block: |
       enable-ssh-support
       pinentry-program /usr/bin/pinentry-gnome3
+
+- name: touch gpg-agent environment file
+  become: no
+  file:
+    path: ~/.config/environment.d/99-gpg-agent_ssh.conf
+    state: touch
+    mode: u=rw
+
+- name: configure gpg-agent environment
+  become: no
+  blockinfile:
+    path: ~/.config/environment.d/99-gpg-agent_ssh.conf
+    block: |
+      SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh

@@ -40,5 +40,12 @@ else
 fi
 
 if [ "$1" == true ]; then
-	$PKGCMD python3.7 ansible
+	$PKGCMD ansible neovim git make
+fi
+
+
+if [ ! -d $HOME/.homesick/repos/homeshick ]; then
+	git clone https://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
+	printf '\nsource "$HOME/.homesick/repos/homeshick/homeshick.sh"' >> $HOME/.bashrc
+	. $HOME/.bashrc
 fi
